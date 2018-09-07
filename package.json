@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test-w": "jest --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7"
+  },
+  "devDependencies": {
+    "jest": "^23.5.0"
+  }
+}
