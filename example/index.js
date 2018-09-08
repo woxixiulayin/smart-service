@@ -1,5 +1,5 @@
 // @flow
-import { Service, dispatch, addToDispatch } from '../src/Service'
+import { Service, dispatch, markMethod } from '../src/Service'
 
 type AState = {
     name: string
@@ -28,7 +28,7 @@ export class B extends Service<BSate> {
         super({ state })
     }
     
-    @addToDispatch
+    @markMethod
     changea(name) {
         return a.setState({
             name

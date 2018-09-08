@@ -9,7 +9,7 @@ const getServiceState = () => serviceState
 
 window.getServiceState = getServiceState
 
-const addToDispatch = function(target, name, descriptor) {
+const markMethod = function(target, name, descriptor) {
     descriptor.value.isDispatchAble = true
     return descriptor.value
 }
@@ -27,6 +27,7 @@ class Service <A> {
 
         serviceInstances[this.displayName] = this
 
+        // add Method into dispatch
         for(const key of Object.getOwnPropertyNames(this.__proto__)) {
             if (this[key].isDispatchAble) {
                 if (!dispatch[this.displayName]) {
@@ -101,5 +102,5 @@ export {
     Service,
     getServiceState,
     dispatch,
-    addToDispatch
+    markMethod
 }
