@@ -1,40 +1,42 @@
 // @flow
-import { Service } from '../src/Service'
+import { Service, dispatch, addToDispatch } from '../src/Service'
 
-type aSate = {
+type AState = {
     name: string
 }
-type bSate = {
+type BSate = {
     number: Number
 }
 
-class A extends Service<aState> {
+export class A extends Service<AState> {
     constructor(name: string) {
-        const state = {
+        const state: AState = {
             name: name
         }
         super({ state })
     }
 }
 
-const a = new A('class A')
+const a = new A('a')
 
 
-
-class B extends Service<bState> {
+export class B extends Service<BSate> {
     constructor(number: Number) {
-        const state = {
+        const state: BSate = {
             number: number
         }
         super({ state })
     }
-
-    getAName() {
-        return a.getState().number
+    
+    @addToDispatch
+    changea(name) {
+        return a.setState({
+            name
+        })
     }
 }
 
+window.a = a
 const b = new B(2)
-
-
-console.log(b.getAName())
+window.b = b
+dispatch.b.changea('sdf')

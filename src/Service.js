@@ -1,47 +1,64 @@
 // @flow
+import { TypeDispatch } from './types'
 const log = console.log
 const serviceInstances = []
 
 let serviceState = {}
-
+const dispatch: TypeDispatch = {}
 const getServiceState = () => serviceState
 
-class Service<T> {
+window.getServiceState = getServiceState
+
+const addToDispatch = function(target, name, descriptor) {
+    descriptor.value.isDispatchAble = true
+    return descriptor.value
+}
+window.dispatch = dispatch
+class Service <A> {
     constructor({
         state
     }: {
-        state: T
+        state: A
     }) {
-        this.displayName = this.constructor.name
+        this.displayName = String.prototype.toLocaleLowerCase.call(this.constructor.name)
         if (serviceInstances[this.displayName]) {
             throw new Error(`can not create same service with name ${this.displayName}`)
         }
 
         serviceInstances[this.displayName] = this
 
-        this._state = {}
+        for(const key of Object.getOwnPropertyNames(this.__proto__)) {
+            if (this[key].isDispatchAble) {
+                if (!dispatch[this.displayName]) {
+                    dispatch[this.displayName] = {}
+                }
+                dispatch[this.displayName][key] = this[key].bind(this)
+            }
+        }
+
+        this.state = {}
         this._listeners = []
         this.setState(state)
     }
 
-    getState():T {
-        return this._state
+    getState(): A {
+        return this.state
     }
 
     setState(updater) {
-        const preState = this._state
+        const preState = this.state
 
         if (!serviceInstances[this.displayName]) {  
             throw new Error(`can not setState when service is not in list`)
         }
 
         if (typeof updater === 'function') {
-            this._state = {
+            this.state = {
                 ...preState,
                 ...updater(preState)
             }
         } else {
-            this._state = {
+            this.state = {
                 ...preState,
                 ...updater
             }
@@ -52,12 +69,12 @@ class Service<T> {
 
 
     onStateChange(preState) {
-        log(`service ${this.displayName} change state from`, preState, 'to', this._state)
+        log(`service ${this.displayName} change state from`, preState, 'to', this.state)
         const preServiceState = serviceState
         
         serviceState = {
             ...preServiceState,
-            [this.displayName]: this._state
+            [this.displayName]: this.state
         }
 
         log(`serviceState changed from`, preServiceState, 'to', serviceState)
@@ -83,4 +100,6 @@ class Service<T> {
 export {
     Service,
     getServiceState,
+    dispatch,
+    addToDispatch
 }
