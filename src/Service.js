@@ -14,10 +14,9 @@ class Service <T> {
     constructor({ state, name }: {
         state: T
     }) {
-        this._state = {}
         this.name = String.prototype.toLocaleLowerCase.call(this.constructor.name) || 'service'
         this.listeners = []
-        this.setState(state)
+        this._state = state
     }
     
     getState(): T {
