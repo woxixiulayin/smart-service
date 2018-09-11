@@ -1,2 +1,3 @@
-export { default as connectService } from './connectService'
-export { default as Service } from './Service'
+import Service from './Service'
+
+export default Service

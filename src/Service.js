@@ -24,7 +24,7 @@ class Service <T> {
         return this._state
     }
     
-    setState(state: any) {
+    setState(state: T) {
         const preState = this._state
         
         this._state = {

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Service } from '../src'
+import Service from '../src'
 
 type typeState = {
     x: number,
@@ -20,6 +20,7 @@ class Data extends Service<typeState> {
 }
 
 const data = new Data()
+
 window.data = data
 @data.connect(state => ({
     z: state.x + state.y
