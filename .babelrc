@@ -2,5 +2,5 @@
     "presets": [
         "es2015", "stage-0"
     ],
-    "plugins": ["transform-flow-strip-types", "transform-decorators-legacy"]
+    "plugins": ["transform-flow-strip-types", "transform-decorators-legacy", "transform-class-properties"]
 }

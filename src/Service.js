@@ -1,106 +1,68 @@
 // @flow
-import { TypeDispatch } from './types'
+import connectService from './connectService'
+import { typeProps } from './types'
+
 const log = console.log
-const serviceInstances = []
 
-let serviceState = {}
-const dispatch: TypeDispatch = {}
-const getServiceState = () => serviceState
+class Service <T> {
 
-window.getServiceState = getServiceState
-
-const markMethod = function(target, name, descriptor) {
-    descriptor.value.isDispatchAble = true
-    return descriptor.value
-}
-window.dispatch = dispatch
-class Service <A> {
-    constructor({
-        state
-    }: {
-        state: A
+    // properties
+    _state: T
+    name: string
+    listeners: Array<(state: T) => any>
+    
+    constructor({ state, name }: {
+        state: T
     }) {
-        this.displayName = String.prototype.toLocaleLowerCase.call(this.constructor.name)
-        if (serviceInstances[this.displayName]) {
-            throw new Error(`can not create same service with name ${this.displayName}`)
-        }
-
-        serviceInstances[this.displayName] = this
-
-        // add Method into dispatch
-        for(const key of Object.getOwnPropertyNames(this.__proto__)) {
-            if (this[key].isDispatchAble) {
-                if (!dispatch[this.displayName]) {
-                    dispatch[this.displayName] = {}
-                }
-                dispatch[this.displayName][key] = this[key].bind(this)
-            }
-        }
-
-        this.state = {}
-        this._listeners = []
+        this._state = {}
+        this.name = String.prototype.toLocaleLowerCase.call(this.constructor.name) || 'service'
+        this.listeners = []
         this.setState(state)
     }
-
-    getState(): A {
-        return this.state
+    
+    getState(): T {
+        return this._state
     }
-
-    setState(updater) {
-        const preState = this.state
-
-        if (!serviceInstances[this.displayName]) {  
-            throw new Error(`can not setState when service is not in list`)
-        }
-
-        if (typeof updater === 'function') {
-            this.state = {
-                ...preState,
-                ...updater(preState)
-            }
-        } else {
-            this.state = {
-                ...preState,
-                ...updater
-            }
-        }
-
-        this.onStateChange(preState)
-    }
-
-
-    onStateChange(preState) {
-        log(`service ${this.displayName} change state from`, preState, 'to', this.state)
-        const preServiceState = serviceState
+    
+    setState(state: any) {
+        const preState = this._state
         
-        serviceState = {
-            ...preServiceState,
-            [this.displayName]: this.state
+        this._state = {
+            ...preState,
+            ...state
         }
+        this.stateDidChange(preState)
+    }
+    
+    stateDidChange(preState: T) {
+        log(`service ${this.name} state change from`, preState, 'to', this._state)
 
-        log(`serviceState changed from`, preServiceState, 'to', serviceState)
-
-        const currentListeners = this._listeners.slice()
+        const currentListeners = this.listeners.slice()
         for (const listener of currentListeners) {
-            listener()
+            listener(this._state)
         }
     }
 
-    subscribe(listener: Function) {
+    // provide props for component
+    // just for autocomplete purposes
+    connect = (mapState: (state: T, props: typeProps) => typeProps) => connectService(this, mapState)
 
-        this._listeners.push(listener)
+    subscribe(listener: (state: T) => any) {
+        if (this.listeners.indexOf(listener) !== -1) {
+            throw new Error('listener should not duplicate subscribe')
+        }
 
-        function unsubscribe(){
-            this._listeners.splice(this._listeners.indexOf[listener], 1)
+        this.listeners.push(listener)
+
+        const unsubscribe = () => {
+            if (this.listeners.indexOf(listener) === -1) {
+                throw new Error('listener has already unsubscribe')
+            }
+            this.listeners.splice(this.listeners.indexOf(listener), 1)
         }
 
         return unsubscribe
     }
 }
 
-export {
-    Service,
-    getServiceState,
-    dispatch,
-    markMethod
-}
+export default Service

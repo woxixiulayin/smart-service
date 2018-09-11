@@ -1,42 +1,36 @@
 // @flow
-import { Service, dispatch, markMethod } from '../src/Service'
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import { Service } from '../src'
 
-type AState = {
-    name: string
-}
-type BSate = {
-    number: Number
+type typeState = {
+    x: number,
+    y: number
 }
 
-export class A extends Service<AState> {
-    constructor(name: string) {
-        const state: AState = {
-            name: name
+
+class Data extends Service<typeState> {
+    constructor() {
+        const state: typeState = {
+            x: 1,
+            y: 2,
         }
         super({ state })
     }
 }
 
-const a = new A('a')
-
-
-export class B extends Service<BSate> {
-    constructor(number: Number) {
-        const state: BSate = {
-            number: number
-        }
-        super({ state })
-    }
-    
-    @markMethod
-    changea(name) {
-        return a.setState({
-            name
-        })
+const data = new Data()
+window.data = data
+@data.connect(state => ({
+    z: state.x + state.y
+}))
+class App extends Component<{z: number}> {
+    render() {
+        return <div>{ this.props.z }</div>
     }
 }
 
-window.a = a
-const b = new B(2)
-window.b = b
-dispatch.b.changea('sdf')
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+)
