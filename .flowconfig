@@ -1,0 +1,11 @@
+[ignore]
+.*/__tests__/.*
+.*/*.json
+./dist
+./build/.*
+./dll/.*
+
+[include]
+./node_modules/
+
+[libs]
