@@ -11,7 +11,7 @@ class Service <T> {
     name: string
     listeners: Array<(state: T) => any>
     
-    constructor({ state, name }: {
+    constructor({ state }: {
         state: T
     }) {
         this.name = String.prototype.toLocaleLowerCase.call(this.constructor.name) || 'service'

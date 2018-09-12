@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, PureComponent } from 'react'
+import React, { Component, PureComponent, createElement } from 'react'
 import Service from './Service'
 
 function getDisplayName(WrappedComponent) {
@@ -10,7 +10,7 @@ function noop() {}
 /**
  * subscribe data from certain service 
  */
-const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: any) => any) => WrappedComponent => class ConnectService extends PureComponent<any, T> {
+const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: Component) => class ConnectService extends PureComponent<any, T> {
     static displayName = `connectService-${service.name}`
 
     unsubscribe: Function
@@ -35,7 +35,10 @@ const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: a
     }
 
     render() {
-        return <WrappedComponent {...this.props} {...this.state} />
+        return createElement(
+            WrappedComponent,
+            { ...this.props, ...this.state}
+        )
     }
 }
 
