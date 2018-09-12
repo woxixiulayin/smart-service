@@ -1,5 +1,6 @@
-import connectService from '../connectService'
 import React, { Component } from 'react'
+import { mount } from 'enzyme'
+import connectService from '../connectService'
 import Service from '../Service'
 
 describe('test connectService', () => {
@@ -23,7 +24,10 @@ describe('test connectService', () => {
     }
 
     it('should change when setState', () => {
-        
+        const wrapper = mount(<App />)
+        expect(wrapper.text()).toBe('1')
+        data.setState({ a: 2 })
+        expect(wrapper.text()).toBe('2')
     })
 
 })
