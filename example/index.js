@@ -22,15 +22,18 @@ class Data extends RxService<typeState> {
 const data = new Data()
 
 window.data = data
+
 @data.connect(state => ({
-    z: state.x + state.y
+    num: state.x + state.y
 }))
 class App extends Component<{}> {
     render() {
-        return <div>{ this.props.z }</div>
+        return <div>{ this.props.num }</div>
     }
 }
+
 data.state$.subscribe(data => console.log('==========', data))
+
 ReactDOM.render(
     <App />,
     document.getElementById('app')
