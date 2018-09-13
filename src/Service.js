@@ -53,13 +53,21 @@ class Service <T> {
         return this._state
     }
     
-    setState(state: T) {
+    setState(updater: T | (state: T) => T) {
         const preState = this._state
-        
-        this._state = {
-            ...preState,
-            ...state
+
+        if (typeof updater === 'function') {
+            this._state = {
+                ...preState,
+                ...updater(preState)
+            }
+        } else {
+            this._state = {
+                ...preState,
+                ...updater
+            }
         }
+        
         this.stateDidChange(preState)
     }
     
