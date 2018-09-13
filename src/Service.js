@@ -12,34 +12,26 @@ class Service <T> {
 
     static serviceMap: typeServiceMap = new Map()
 
-    static registerService = ServiceClass => {
-
-        const list = [].concat(ServiceClass)
-
-        for(const ServiceClass of list) {
-            const name = getClassName(ServiceClass)
-            if (Service.serviceMap.has(name)) {
-                throw new Error(`service ${name} has already be in the serviceMap`)
-            }
-            const serviceInstance = new ServiceClass()
-            Service.serviceMap.set(name, serviceInstance)
+    static registerService = (ServiceClass): Service<T> => {
+        const name = getClassName(ServiceClass)
+        if (Service.serviceMap.has(name)) {
+            throw new Error(`service ${name} has already be in the serviceMap`)
         }
+        const serviceInstance = new ServiceClass()
+        Service.serviceMap.set(name, serviceInstance)
+        console.log('+++++', Service.serviceMap)
 
-        return true
+        return serviceInstance
     }
 
-    static unregisterService = ServiceClass => {
-
-        const list = [].concat(ServiceClass)
-
-        for(const ServiceClass of list) {
-            const name = getClassName(ServiceClass)
-            if (!Service.serviceMap.has(name)) {
-                throw new Error(`service ${name} is not in the serviceMap`)
-            }
-    
-            Service.serviceMap.delete(name)
+    static unregisterService = (ServiceClass): boolean => {
+        const name = getClassName(ServiceClass)
+        if (!Service.serviceMap.has(name)) {
+            throw new Error(`service ${name} is not in the serviceMap`)
         }
+
+        Service.serviceMap.delete(name)
+
         return true
     }
 
@@ -81,10 +73,6 @@ class Service <T> {
             listener(this._state)
         }
     }
-    
-    // provide props for component
-    // just for autocomplete purposes
-    connect = (mapState: (state: T, props: typeProps) => typeProps) => connectService(this, mapState)
 
     subscribe(listener: (state: T) => any) {
         if (this.listeners.indexOf(listener) !== -1) {

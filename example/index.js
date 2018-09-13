@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Service, RxService } from '../src'
-import withService from '../src/withService'
+import { Service, RxService, withService } from '../src'
 
 type typeState = {
     x: number,
@@ -31,17 +30,19 @@ class Data extends RxService<typeState> {
 @withService(Data, state => ({
     num: state.x + state.y
 }))
-class App extends Component<{}> {
+class App extends Component<any, any> {
     render() {
-        console.log(this.props.data)
+        console.log(Service.serviceMap, this.props.data)
         return <div>{ this.props.num }</div>
     }
 }
+
 window.Service = Service
 window.Data = Data
-Service.getServiceInstance(Data).state$.subscribe(data => console.log('==========', data))
 
 ReactDOM.render(
     <App />,
     document.getElementById('app')
 )
+Service.getServiceInstance(Data).state$.subscribe(data => console.log('==========', data))
+

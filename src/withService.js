@@ -6,9 +6,8 @@ import connectService from './connectService'
 
 const withService = <T>(ServiceClass: Class<Service<T>>, mapState: (state: T) => any) => {
 
-    const serviceInstance = Service.getServiceInstance(ServiceClass) || new ServiceClass()
+    const serviceInstance = Service.getServiceInstance(ServiceClass) || Service.registerService(ServiceClass)
 
-    console.log('withService', ServiceClass, serviceInstance,)
     return connectService(serviceInstance, mapState)
 }
 
