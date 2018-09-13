@@ -32,7 +32,7 @@ class Data extends RxService<typeState> {
 }))
 class App extends Component<any, any> {
     render() {
-        console.log(Service.serviceMap, this.props.data)
+        console.log(Service.serviceMap, this)
         return <div>{ this.props.num }</div>
     }
 }

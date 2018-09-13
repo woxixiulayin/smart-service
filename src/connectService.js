@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import Service from './Service'
+import injectService from './injectService'
 
 function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component'
@@ -38,7 +39,7 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
 
     render() {
         return React.createElement(
-            WrappedComponent,
+            injectService(serviceInstance.__proto__.constructor)(WrappedComponent),
             { ...this.props, ...this.state, [serviceInstance.name]: serviceInstance}
         )
     }

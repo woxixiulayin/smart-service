@@ -1,12 +1,11 @@
 // @flow
 import connectService from './connectService'
 import { typeProps } from './types'
+import { getClassName } from './utils/getClassName'
 
 const log = console.log
 
 type typeServiceMap = Map<string, Service<any>>
-
-const getClassName = Class => String.prototype.toLocaleLowerCase.call(Class.name)
 
 class Service <T> {
 
@@ -19,7 +18,6 @@ class Service <T> {
         }
         const serviceInstance = new ServiceClass()
         Service.serviceMap.set(name, serviceInstance)
-        console.log('+++++', Service.serviceMap)
 
         return serviceInstance
     }
