@@ -39,4 +39,15 @@ describe('test service', () => {
         test.setState()
         expect(count === 1).toBeTruthy()
     })
+
+    it('registerService and unregisterService', () => {
+        Service.registerService(Test)
+
+        expect(Service.getServiceInstance(Test)).toBeTruthy()
+        expect(() => Service.registerService(Test)).toThrowError('service test has already be in the serviceMap')
+        
+        Service.unregisterService(Test)
+        expect(Service.getServiceInstance(Test)).toBeFalsy()
+    })
+
 })

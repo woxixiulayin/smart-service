@@ -10,8 +10,8 @@ function noop() {}
 /**
  * subscribe data from certain service 
  */
-const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: React.Component<any, any>) => class ConnectService extends React.PureComponent<any, T> {
-    static displayName = `connectService-${service.name}`
+const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: React.Component<any, any>) => class ConnectService extends React.PureComponent<any, T> {
+    static displayName = `connectService-${serviceInstance.name}`
 
     unsubscribe: Function
 
@@ -19,13 +19,15 @@ const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: a
         super()
         // do not forget init state
         this.state = {
-            ...mapState(service.getState(), this.props)
+            ...mapState(serviceInstance.getState(), this.props)
         }
         this.unsubscribe = noop
+        console.log('ConnectService', serviceInstance)
     }
 
     componentDidMount() {
-        this.unsubscribe = service.subscribe(serviceState => {
+        console.log('ConnectService')
+        this.unsubscribe = serviceInstance.subscribe(serviceState => {
             this.setState(mapState(serviceState, this.props))
         })
     }
@@ -37,7 +39,7 @@ const connectService = <T>(service: Service<T>, mapState: (state: T, ownProps: a
     render() {
         return React.createElement(
             WrappedComponent,
-            { ...this.props, ...this.state}
+            { ...this.props, ...this.state, [serviceInstance.name]: serviceInstance}
         )
     }
 }
