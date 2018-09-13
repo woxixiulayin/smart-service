@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { mount } from 'enzyme'
+import { mount, ReactWrapper } from 'enzyme'
 import connectService from '../connectService'
 import Service from '../Service'
 
@@ -23,11 +23,20 @@ describe('test connectService', () => {
         }
     }
 
+    let wrapper: ReactWrapper
+
+    beforeEach(() => {
+        wrapper = mount(<App />)
+    })
+
     it('should change when setState', () => {
-        const wrapper = mount(<App />)
         expect(wrapper.text()).toBe('1')
         data.setState({ a: 2 })
         expect(wrapper.text()).toBe('2')
+    })
+
+    it('should passBy service instance', () => {
+        expect(wrapper.childAt(0).props().data).toBeTruthy()
     })
 
 })

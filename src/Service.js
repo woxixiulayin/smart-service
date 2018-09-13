@@ -1,7 +1,7 @@
 // @flow
 import connectService from './connectService'
 import { typeProps } from './types'
-import { getClassName } from './utils/getClassName'
+import getClassName from './utils/getClassName'
 
 const log = console.log
 
