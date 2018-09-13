@@ -16,7 +16,12 @@ describe('test connectService', () => {
 
     const data = new Data()
 
-    @connectService(data, state => ({ num: state.a }))
+    @connectService(data, (state, ownProps) => {
+        return {
+            num: state.a,
+            id: ownProps.id
+        }
+    })
     class App extends Component {
         render() {
             return <div>{this.props.num}</div>
@@ -26,7 +31,7 @@ describe('test connectService', () => {
     let wrapper: ReactWrapper
 
     beforeEach(() => {
-        wrapper = mount(<App />)
+        wrapper = mount(<App id={1} />)
     })
 
     it('should change when setState', () => {
@@ -35,8 +40,16 @@ describe('test connectService', () => {
         expect(wrapper.text()).toBe('2')
     })
 
+    it('should passBy props', () => {
+        expect(wrapper.childAt(0).props().id).toBe(1)
+    })
+
     it('should passBy service instance', () => {
         expect(wrapper.childAt(0).props().data).toBeTruthy()
+    })
+
+    it('should mapState work', () => {
+        expect(wrapper.childAt(0).props().id).toBe(1)
     })
 
 })
