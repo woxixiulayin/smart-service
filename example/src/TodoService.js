@@ -45,7 +45,7 @@ export default class TodoService extends Service<typeTodoState> {
     
     done(id: number, done: boolean) {
         this.setState(state => {
-            const todoByIds = {...state.todoByIds, id: {...state.todoByIds[id], done }}
+            const todoByIds = {...state.todoByIds, [id]: {...state.todoByIds[id], done }}
             return { todoByIds }
         })
     }
