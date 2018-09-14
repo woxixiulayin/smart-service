@@ -8,6 +8,9 @@ function getDisplayName(WrappedComponent) {
 
 /**
  * subscribe data from certain service 
+ * 
+ * TODO: 
+ * 1. fix hot-reload duplicate subscribe error, reference react-redux
  */
 const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: React.Component<any, any>) => class extends React.Component<any, T> {
     static displayName = `connectService-${serviceInstance.name}`
