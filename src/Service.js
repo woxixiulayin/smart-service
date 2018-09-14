@@ -44,8 +44,7 @@ class Service <T> {
     constructor({ state }: {
         state: T,
     }) {
-        this.name = String.prototype.toLocaleLowerCase.call(this.constructor.name) || 'service'
-
+        this.name = getClassName(this.__proto__.constructor)
         this.currentListeners = []
         this.nextListeners = []
         this._state = state
