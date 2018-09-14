@@ -76,7 +76,7 @@ class Service <T> {
     stateDidChange(preState: T) {
         log(`service ${this.name} state change from`, preState, 'to', this._state)
         
-        const currentListeners = this.currentListeners = this.nextListeners
+        const currentListeners = this.currentListeners = this.nextListeners.slice()
         for (const listener of currentListeners) {
             listener(this._state)
         }
