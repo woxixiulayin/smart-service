@@ -38,14 +38,16 @@ class Service <T> {
     // properties
     _state: T
     name: string
-    listeners: Array<(state: T) => any>
+    currentListeners: Array<(state: T) => any>
+    nextListeners: Array<(state: T) => any>
     
     constructor({ state }: {
         state: T,
     }) {
         this.name = String.prototype.toLocaleLowerCase.call(this.constructor.name) || 'service'
 
-        this.listeners = []
+        this.currentListeners = []
+        this.nextListeners = []
         this._state = state
     }
     
@@ -74,24 +76,22 @@ class Service <T> {
     stateDidChange(preState: T) {
         log(`service ${this.name} state change from`, preState, 'to', this._state)
         
-        const currentListeners = this.listeners.slice()
+        const currentListeners = this.currentListeners = this.nextListeners
         for (const listener of currentListeners) {
             listener(this._state)
         }
     }
 
-    subscribe(listener: (state: T) => any) {
-        if (this.listeners.indexOf(listener) !== -1) {
-            throw new Error('listener should not duplicate subscribe')
-        }
+    subscribe(listener: (state: T) => any): Function {
+        let isSubscribed = true
         
-        this.listeners.push(listener)
+        this.nextListeners.push(listener)
         
         const unsubscribe = () => {
-            if (this.listeners.indexOf(listener) === -1) {
-                throw new Error('listener has already unsubscribe')
-            }
-            this.listeners.splice(this.listeners.indexOf(listener), 1)
+            if (!isSubscribed) return
+
+            isSubscribed = false
+            this.nextListeners.splice(this.nextListeners.indexOf(listener), 1)
         }
 
         return unsubscribe

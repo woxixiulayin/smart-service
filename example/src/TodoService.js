@@ -52,7 +52,7 @@ export default class TodoService extends Service<typeTodoState> {
 
     delete(id: number) {
         this.setState(state => {
-            const todoByIds = [...state.todoByIds]
+            const todoByIds = { ...state.todoByIds }
             delete todoByIds[id]
             return { todoByIds }
         })

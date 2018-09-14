@@ -25,9 +25,7 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
     }
 
     componentDidMount() {
-        // console.log('ConnectService',  serviceInstance, this)
         this.unsubscribe = serviceInstance.subscribe(serviceState => {
-            // console.log(`on service ${serviceInstance.name} change`, serviceState, this)
             this.setState(mapState(serviceState, this.props))
         })
     }
