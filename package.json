@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "babel-preset-flow": "^6.23.0",
+    "immer": "^1.6.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",

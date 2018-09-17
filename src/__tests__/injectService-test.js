@@ -1,3 +1,5 @@
+// @flow
+
 import injectService from '../injectService'
 import * as React from 'react'
 import Service from '../Service'
@@ -13,15 +15,17 @@ describe('test injectService', () => {
 
     it('should inject service instance into Service', () => {
         @injectService(Dependency)
-        class Test extends Service<string> {
-            constructor() {
+        class Test extends Service<strinsg> {
+            constructor(dependency) {
                 const state = 'test'
                 super({ state })
+                this.dependency = dependency
             }
         }
 
         const test = new Test()
 
-        expect(test.dependency instanceof Dependency).toBeTruthy()
+        expect(test.getState()).toBe('test')
+        expect(test.dependency.getState()).toBe('dependency')
     })
 })
