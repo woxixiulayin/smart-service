@@ -13,7 +13,7 @@ describe('test injectService', () => {
         }
     }
 
-    it('should inject service instance into Service', () => {
+    it('should inject Dependency instance into Test as constructor param ', () => {
         @injectService(Dependency)
         class Test extends Service<strinsg> {
             constructor(dependency) {
