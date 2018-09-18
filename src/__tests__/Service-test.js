@@ -20,7 +20,11 @@ describe('test service', () => {
     let test: Test
 
     beforeEach(() => {
-        test = new Test()
+        test = Service.registerService(Test)
+    })
+
+    afterEach(() => {
+        Service.unregisterService(Test)
     })
 
     it('produceState can change state', () => {
@@ -33,20 +37,31 @@ describe('test service', () => {
         expect(test.getState().a).toBe(2)
         expect(test.getState() === preState).toBeFalsy()
     })
-
-    it('listener should subscribe and unsubscribe service', () => {
+    
+    it('listener should can subscribe/unsubscribe service', () => {
         let count = 0
         const unsubscribe = test.subscribe(state => count++)
-        test.produceState(state => state)
+        test.produceState(state => { state.a = 3 })
         expect(count === 1).toBeTruthy()
         unsubscribe()
         test.produceState(state => state)
         expect(count === 1).toBeTruthy()
     })
 
-    it('registerService and unregisterService', () => {
-        Service.registerService(Test)
+    it('should call stateDidChange when state really change after produceState', () => {
+        let count = 0
+        const unsubscribe = test.subscribe(state => count++)
+        expect(test.getState().a).toBe(1)
+        console.log(test)
+        test.produceState(state => { state.a = 1 })
+        expect(count === 0).toBeTruthy()
+        
+        test.produceState(state => { state.a = 2})
+        expect(count === 1).toBeTruthy()
+    })
 
+    it('registerService and unregisterService', () => {
+        
         expect(Service.getServiceInstance(Test)).toBeTruthy()
         expect(() => Service.registerService(Test)).toThrowError('service test has already be in the serviceMap')
         

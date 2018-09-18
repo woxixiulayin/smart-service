@@ -26,7 +26,7 @@ class Service <T> {
     static unregisterService = (ServiceClass): boolean => {
         const name = getClassName(ServiceClass)
         if (!Service.serviceMap.has(name)) {
-            throw new Error(`service ${name} is not in the serviceMap`)
+            return false
         }
 
         Service.serviceMap.delete(name)
@@ -63,8 +63,11 @@ class Service <T> {
         }
 
         this._state = produce(preState, updater)
-        
-        this.stateDidChange(preState)
+    
+        // only call stateDidChange when state really change
+        if (this._state !== preState) {
+            this.stateDidChange(preState)
+        }
     }
     
     stateDidChange(preState: T) {
