@@ -4,6 +4,8 @@ type typeState = {
     a: number
 }
 
+function noop() {}
+
 describe('test service', () => {
     class Test extends Service<typeState> {
         constructor() {
@@ -21,11 +23,13 @@ describe('test service', () => {
         test = new Test()
     })
 
-    it('setState can change state', () => {
+    it('produceState can change state', () => {
         const preState = test.getState()
         expect(preState.a).toBe(1)
 
-        test.setState({ a: 2 })
+        test.produceState(state => {
+            state.a = 2
+        })
         expect(test.getState().a).toBe(2)
         expect(test.getState() === preState).toBeFalsy()
     })
@@ -33,10 +37,10 @@ describe('test service', () => {
     it('listener should subscribe and unsubscribe service', () => {
         let count = 0
         const unsubscribe = test.subscribe(state => count++)
-        test.setState()
+        test.produceState(state => state)
         expect(count === 1).toBeTruthy()
         unsubscribe()
-        test.setState()
+        test.produceState(state => state)
         expect(count === 1).toBeTruthy()
     })
 

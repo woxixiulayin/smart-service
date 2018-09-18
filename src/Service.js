@@ -1,6 +1,7 @@
 // @flow
 import connectService from './connectService'
 import { typeProps } from './types'
+import { produce } from 'immer'
 import getClassName from './utils/getClassName'
 
 const log = console.log
@@ -54,20 +55,14 @@ class Service <T> {
         return this._state
     }
     
-    setState(updater: T | (state: T) => T) {
+    produceState(updater: (state: T) => void) {
         const preState = this._state
 
-        if (typeof updater === 'function') {
-            this._state = {
-                ...preState,
-                ...updater(preState)
-            }
-        } else {
-            this._state = {
-                ...preState,
-                ...updater
-            }
+        if (typeof updater !== 'function') {
+            throw new Error('produceState only accept function as param')
         }
+
+        this._state = produce(preState, updater)
         
         this.stateDidChange(preState)
     }

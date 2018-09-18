@@ -5,7 +5,7 @@ import Service from '../Service'
 
 describe('test connectService', () => {
 
-    class Data extends Service<{a: number}> {
+    class DataService extends Service<{a: number}> {
         constructor() {
             const state = {
                 a: 1
@@ -14,9 +14,9 @@ describe('test connectService', () => {
         }
     }
 
-    const data = new Data()
+    const dataService = new DataService()
 
-    @connectService(data, (state, ownProps) => {
+    @connectService(dataService, (state, ownProps) => {
         return {
             num: state.a,
             id: ownProps.id
@@ -34,9 +34,9 @@ describe('test connectService', () => {
         wrapper = mount(<App id={1} />)
     })
 
-    it('should change when setState', () => {
+    it('should change when produceState', () => {
         expect(wrapper.text()).toBe('1')
-        data.setState({ a: 2 })
+        dataService.produceState(state => { state.a = 2 })
         expect(wrapper.text()).toBe('2')
     })
 
@@ -45,7 +45,7 @@ describe('test connectService', () => {
     })
 
     it('should passBy service instance', () => {
-        expect(wrapper.childAt(0).props().data).toBeTruthy()
+        expect(wrapper.childAt(0).props().dataService).toBeTruthy()
     })
 
     it('should mapState work', () => {

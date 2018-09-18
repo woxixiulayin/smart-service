@@ -8,7 +8,7 @@ describe('test RxService', () => {
         service.state$.subscribe(data => (count = data.num))
 
         expect(count).toBe(1)
-        service.setState({ num: 2 })
+        service.produceState(state => { state.num = 2 })
         expect(count).toBe(2)
     })
 
