@@ -36,7 +36,7 @@ describe('test connectService', () => {
 
     it('should change when produceState', () => {
         expect(wrapper.text()).toBe('1')
-        dataService.produceState(state => { state.a = 2 })
+        dataService._produceState(state => { state.a = 2 })
         expect(wrapper.text()).toBe('2')
     })
 

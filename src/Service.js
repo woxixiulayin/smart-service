@@ -55,7 +55,7 @@ class Service <T> {
         return this._state
     }
     
-    produceState(updater: (state: T) => void) {
+    _produceState(updater: (state: T) => void) {
         const preState = this._state
 
         if (typeof updater !== 'function') {

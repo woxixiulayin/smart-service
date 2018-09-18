@@ -31,7 +31,7 @@ describe('test service', () => {
         const preState = test.getState()
         expect(preState.a).toBe(1)
 
-        test.produceState(state => {
+        test._produceState(state => {
             state.a = 2
         })
         expect(test.getState().a).toBe(2)
@@ -41,10 +41,10 @@ describe('test service', () => {
     it('listener should can subscribe/unsubscribe service', () => {
         let count = 0
         const unsubscribe = test.subscribe(state => count++)
-        test.produceState(state => { state.a = 3 })
+        test._produceState(state => { state.a = 3 })
         expect(count === 1).toBeTruthy()
         unsubscribe()
-        test.produceState(state => state)
+        test._produceState(state => state)
         expect(count === 1).toBeTruthy()
     })
 
@@ -53,10 +53,10 @@ describe('test service', () => {
         const unsubscribe = test.subscribe(state => count++)
         expect(test.getState().a).toBe(1)
         console.log(test)
-        test.produceState(state => { state.a = 1 })
+        test._produceState(state => { state.a = 1 })
         expect(count === 0).toBeTruthy()
         
-        test.produceState(state => { state.a = 2})
+        test._produceState(state => { state.a = 2})
         expect(count === 1).toBeTruthy()
     })
 

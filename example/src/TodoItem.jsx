@@ -7,12 +7,12 @@ import TodoService, { typeTodo, typeTodoState } from './TodoService'
 @withService(TodoService, (state: typeTodoState, ownProps) => ({
     todo: state.todoByIds[ownProps.id]
 }))
-class TodoItem extends React.Component<{ todo: typeTodo, todoservice: TodoService }> {
+class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoService }> {
 
     toggleDone = () => {
-        const { todo, todoservice } = this.props
+        const { todo, todoService } = this.props
 
-        todoservice.done(todo.id, !todo.done)
+        todoService.done(todo.id, !todo.done)
     }
 
     render() {
