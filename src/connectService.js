@@ -11,6 +11,10 @@ function getDisplayName(WrappedComponent) {
  * 
  * TODO: 
  * 1. fix hot-reload duplicate subscribe error, reference react-redux
+ * @param {Service<T>} serviceInstance - service instance will be inserted into Component.It can be reach by this.props.[serviceInstance.name]
+ * @param {(state: T, ownProps: any) => any} mapState - like mapStateToProps in react-redux, shape props will be passBy to component
+ * @param {React.Component<any, any>} WrappedComponent
+ * 
  */
 const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: React.Component<any, any>) => class extends React.Component<any, T> {
     static displayName = `connectService-${serviceInstance.name}`
