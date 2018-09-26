@@ -6,14 +6,13 @@ import getClassName from './utils/getClassName'
  * @param {Class<Service<T>>} ServiceClass - service Class depended by target Class
  * @param {Class<Service<M>>} target - service Class depended by target Class
  */
-const injectService = <T, M>(ServiceClass: Class<Service<T>>) => (TargetClass: Class<Service<M>>) => {
-    const name = getClassName(ServiceClass)
+const injectService = <T>(...ServiceClasses: Array<Class<Service<any>>>) => (TargetClass: Class<Service<T>>) => {
 
-    const serviceInstance = Service.getServiceInstance(ServiceClass) || Service.registerService(ServiceClass)
+    const serviceInstances = ServiceClasses.map(item => (Service.getServiceInstance(item) || Service.registerService(item)))
 
     const oldProtoType = TargetClass.prototype
     TargetClass = function(...args) {
-        oldProtoType.constructor.call(this, serviceInstance, ...args)
+        oldProtoType.constructor.call(this, ...serviceInstances, ...args)
     }
 
     TargetClass.prototype = Object.create(oldProtoType)

@@ -11,7 +11,7 @@ import TodoItem from './TodoItem'
 }))
 class App extends React.Component{
     render() {
-        console.log('===', this.props)
+
         return (
             <section className="todo-list-container">
                 <h1>todo list</h1>

@@ -6,26 +6,34 @@ import Service from '../Service'
 
 describe('test injectService', () => {
 
-    class Dependency extends Service<string> {
+    class DependencyA extends Service<string> {
         constructor() {
-            const state = 'dependency'
+            const state = 'dependencyA'
+            super({ state })
+        }
+    }
+    class DependencyB extends Service<string> {
+        constructor() {
+            const state = 'dependencyB'
             super({ state })
         }
     }
 
     it('should inject Dependency instance into Test as constructor param ', () => {
-        @injectService(Dependency)
+        @injectService(DependencyA, DependencyB)
         class Test extends Service<strinsg> {
-            constructor(dependency) {
+            constructor(dependencyA, dependencyB) {
                 const state = 'test'
                 super({ state })
-                this.dependency = dependency
+                this.dependencyA = dependencyA
+                this.dependencyB = dependencyB
             }
         }
 
         const test = new Test()
 
         expect(test.getState()).toBe('test')
-        expect(test.dependency.getState()).toBe('dependency')
+        expect(test.dependencyA.getState()).toBe('dependencyA')
+        expect(test.dependencyB.getState()).toBe('dependencyB')
     })
 })
