@@ -1,8 +1,9 @@
 ## About
     一个小的数据管理框架，以Service类的形式将数据与数据操作集合在一个个Service Class内，将程序中拆分成一个个小的Service，然后通过赖注入将数据及类实例注入到组件中。解决redux代码繁琐，数据与操作逻辑分散，不同数据模型间无法直接沟通的问题。同时鼓励将service拆分，不用通过一个中心store来组装所有的service，配合依赖注入，可以使得Y业务逻辑部分代码的拆分、复用、自动加载都变得比较轻松。
-
+-----
 ## Service类
-- 所有定义的Service都不用主动实例化，系统会通过依赖关系自动创建对应的实例，且每一个类都只会存在唯一单例。
+
+- 所有定义的Service都不用主动实例化，系统会通过依赖关系自动创建对应的实例，且每一个类都只会存在唯一单例。
 - state: Service类的内部数据，代码某一服务相关的数据。在实际编码中注意使用泛型Service<T>来定义state的类型会方便不少。
 - _produceState: 继承自Service基类的方法，是唯一可以修改state的方法，一个Service类的state只能通过_produceState方法来修改，且外部不能直接调用，应该使用封装好的"action"来操作。
     > _produceState内部使用了[immer](https://github.com/mweststrate/immer)中的produce方法，使得immutable的操作可以通过mutable的形式实现，这样避免了繁琐的手动返回新对象的操作。
@@ -63,8 +64,11 @@ export default class TodoService extends Service<typeTodoState> {
     }
 }
 ```
-
+
+---------
+
 ## 几个关键的api
+-----
 
 ### withService
 
@@ -98,6 +102,8 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
     }
 }
 ```
+
+-----
 
 ### injectService
 当一个Service依赖其他Service时，可以用过injectService注入其他Service的实例。此时被依赖的Service的实例会依次作为此Service的改构造函数的参数。
