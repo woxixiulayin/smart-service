@@ -106,7 +106,7 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
 -----
 
 ### injectService
-当一个Service依赖其他Service时，可以用过injectService注入其他Service的实例。此时被依赖的Service的实例会依次作为此Service的改构造函数的参数。
+当一个Service依赖其他Service时，可以用过injectService注入其他Service的实例。此时被依赖的Service的实例会依次作为此Service的改构造函数的参数。当然这些Service的实例也只会不存在时自动创建。
 
 ```javascript
 describe('test injectService', () => {
