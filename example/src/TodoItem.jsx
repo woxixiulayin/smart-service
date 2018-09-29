@@ -11,17 +11,23 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
 
     toggleDone = () => {
         const { todo, todoService } = this.props
-
+        
         todoService.done(todo.id, !todo.done)
+    }
+    
+    deleteItem = () => {
+        const { todo, todoService } = this.props
+
+        todoService.delete(todo.id)
     }
 
     render() {
         const { todo } = this.props
 
         return <div className={`todo-item ${todo.done ? 'line-through' : ''}`}>
+           <button onClick={this.deleteItem}>删除</button>
             <input onClick={this.toggleDone} type="checkbox" />
-            <span className="todo-item-id">{ todo.id }</span>
-            <span className={`todo-item-content`}>{ todo.content }</span>
+            <span className={`todo-item-content`}>{ todo.content }ddd</span>
         </div>
     }
 }
