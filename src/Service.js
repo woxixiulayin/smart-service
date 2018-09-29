@@ -4,8 +4,6 @@ import { typeProps } from './types'
 import { produce } from 'immer'
 import getClassName from './utils/getClassName'
 
-const log = console.log
-
 type typeServiceMap = Map<string, Service<any>>
 
 /**
@@ -91,8 +89,7 @@ class Service <T> {
 
     // state changed hook
     stateDidChange(preState: T) {
-        log(`service ${this.name} state change from`, preState, 'to', this._state)
-        
+
         const currentListeners = this.currentListeners = this.nextListeners.slice()
 
         // call listeners
