@@ -14,11 +14,21 @@ export type typeTodoState = {
     }
 }
 
+
+const TODO_LIST = 'TODO_LIST'
+const getLocalData = (key: string): any => JSON.parse(localStorage.getItem(key) || '{}')
+const saveLocalData = (key: string, data: any) => localStorage.setItem(key, JSON.stringify(data))
+
+/**
+ * service是独立的业务逻辑模块，通过withService注入组件。
+ * 任何有关todo的操作和逻辑都可以写在这里，避免在组件中操作公共数据，或者在每个组件中重复写一些通用的方法
+ * 比如利用浏览器缓存todolist这块逻辑就可以很方便的在TodoService中实现，而不用关心具体组件
+ */
 export default class TodoService extends Service<typeTodoState> {
     constructor() {
         super({
             state: {
-                todoByIds: {},
+                todoByIds: getLocalData(TODO_LIST),
             }
         })
     }
@@ -34,21 +44,27 @@ export default class TodoService extends Service<typeTodoState> {
         return todo
     }
 
+    // 在service中独立加入存入localStorage的逻辑，不影响组件
+    updateState = updater => {
+        this._produceState(updater)
+        saveLocalData(TODO_LIST, this.getState().todoByIds)
+    }
+
     add(content: string) {
-        this._produceState(state => {
+        this.updateState(state => {
             const todo = this.createTodo(content)
             state.todoByIds[todo.id] = todo
         })
     }
     
     done(id: number, done: boolean) {
-        this._produceState(state => {
+        this.updateState(state => {
             state.todoByIds[id] && (state.todoByIds[id].done = done)
         })
     }
 
     delete(id: number) {
-        this._produceState(state => {
+        this.updateState(state => {
             delete state.todoByIds[id]
         })
     }

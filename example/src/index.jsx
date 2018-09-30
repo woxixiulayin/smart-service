@@ -7,7 +7,9 @@ import { withService, Service } from '../../src'
 import TodoList from './TodoList'
 
 
-// use decorator to connect component with service, you can also use normal function (see TodoList.jsx)
+/**
+ * 使用装饰器模式注入TodoService（也可以用普通函数的方式，参考TodoList.jsx文件）
+ */
 @withService(TodoService)
 class App extends React.Component<{
     todoService: TodoService,
@@ -16,6 +18,7 @@ class App extends React.Component<{
     input: HTMLInputElement
 
     addItem = () => {
+        // 使用被withService注入的服务实例（该实例是动态生成的，如果已存在直接从框架内部的服务列表中获取，否则实例化这个服务）
         const { todoService } = this.props
         todoService.add(this.input.value)
         this.input.value = ''

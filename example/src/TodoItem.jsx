@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { withService } from '../../src'
-import TodoService, { typeTodo, typeTodoState } from './TodoService'
+import TodoService from './TodoService'
+import type { typeTodo, typeTodoState } from './TodoService'
 
 
 // inject todoservice Instance and mapState to component
@@ -26,7 +27,7 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
 
         return <div className={`todo-item ${todo.done ? 'line-through' : ''}`}>
            <button onClick={this.deleteItem}>删除</button>
-            <input onClick={this.toggleDone} type="checkbox" />
+            <input onClick={this.toggleDone}  checked={todo.done} type="checkbox" />
             <span className={`todo-item-content`}>{ todo.content }ddd</span>
         </div>
     }
