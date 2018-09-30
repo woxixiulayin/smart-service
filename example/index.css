@@ -1,3 +1,5 @@
+@import './normalize.css';
+
 #app {
     width: 100%;
     height: 100%;
@@ -23,6 +25,11 @@ input[type="text"] {
     padding: 0 .5em;
 }
 
+.todo-list-container ul {
+    padding-left: 0;
+    max-height: 500px;
+}
+
 .todo-list-container ul li {
     text-align: left;
     list-style: none;
@@ -30,10 +37,42 @@ input[type="text"] {
     margin-bottom: 8px;
 }
 
-input[type="checkbox"] {
-    margin-right: 8px;
+.todo-list-input {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.todo-list-input button {
+    width: 80px;
 }
 
-button {
-    margin-right: 4px;
+.todo-item {
+    display: flex;
+    align-items: center;
+    height: 25px;
+}
+
+.todo-item input[type="checkbox"] {
+    transform: scale(1.4);
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.todo-item button {
+    flex-shrink: 0;
+    margin-right: 32px;
+}
+
+.todo-item-content {
+    display: inline-block;
+    width: calc(100% - 62px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.todo-list-info {
+    display: flex;
+    height: 25px;
+    justify-content: space-around;
+    align-items: center;
 }

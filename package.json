@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "parcel example/index.html --no-cache",
+    "example": "parcel example/index.html --no-cache",
     "test-w": "jest --watch",
     "test": "jest"
   },

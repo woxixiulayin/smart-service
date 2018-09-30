@@ -1,21 +1,27 @@
 // @flow
-
 import * as React from 'react'
-import ReactDOM from 'react-dom'
-import TodoService, { typeTodo, typeTodoState } from './TodoService'
+import * as ReactDOM from 'react-dom'
+import TodoService from './TodoService'
+import type { typeTodo, typeTodoState } from './TodoService'
 import { withService, Service } from '../../src'
-import TodoItem from './TodoItem'
+import TodoList from './TodoList'
 
-@withService(TodoService, (state: typeTodoState) => ({
-    todoIds: Object.keys(state.todoByIds)
-}))
+
+// use decorator to connect component with service, you can also use normal function (see TodoList.jsx)
+@withService(TodoService)
 class App extends React.Component<{
     todoService: TodoService,
-    todoIds: [number]
 }>{
 
-    onInputKeyDown = e => {
+    input: HTMLInputElement
+
+    addItem = () => {
         const { todoService } = this.props
+        todoService.add(this.input.value)
+        this.input.value = ''
+    }
+
+    onInputKeyDown = e => {
 
         const keyCode = e.keyCode || e.which || e.charCode
         const ctrlKey = e.ctrlKey || e.metaKey
@@ -24,8 +30,7 @@ class App extends React.Component<{
             if (ctrlKey) {
                 e.target.value += '\r'
             } else {
-                todoService.add(e.target.value)
-                e.target.value = ''
+                this.addItem()
             }
         }
     }
@@ -35,12 +40,16 @@ class App extends React.Component<{
         return (
             <section className="todo-list-container">
                 <h1>todo list</h1>
-                <input type="text" onKeyDown={this.onInputKeyDown} />
-                <ul>
-                    {this.props.todoIds.map(id => <li key={id}>
-                            <TodoItem id={id} />
-                        </li>)}
-                </ul>
+                <div className="todo-list-input">
+                    <input
+                      ref={node => (this.input = node)}
+                      autoFocus
+                      type="text"
+                      onKeyDown={this.onInputKeyDown}
+                    />
+                    <button onClick={this.addItem}>添加</button>
+                </div>
+                <TodoList />
             </section>
         )
     }
