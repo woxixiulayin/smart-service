@@ -5,7 +5,8 @@
   "scripts": {
     "example": "parcel example/index.html --no-cache",
     "test-w": "jest --watch",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "dependencies": {
     "babel-preset-flow": "^6.23.0",
