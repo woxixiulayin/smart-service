@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "node"
+install:
+  - yarn
+script:
+  - yarn run test
+  - yarn run coverage
+after_success:
+  - yarn run coveralls
+branches:
+  only:
+    - master
+    - dev
+cache:
+  yarn: true
+  directories:
+    - node_modules

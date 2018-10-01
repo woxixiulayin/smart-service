@@ -26,7 +26,7 @@ const mapStateToProps = (state: typeTodoState) => ({
 // 使用普通函数的方式，对外export已经连接了service的组件，即smart组件，这种方式还可以让TodoList组件单独export用作单元测试或者连接其他服务
 export default withService(TodoService, mapStateToProps)(TodoList)
 
-// 单独export dumb组件
+// 单独export dumb组件:用作单元测试或者连接其他服务
 export {
     TodoList
 }
