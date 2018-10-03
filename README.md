@@ -27,7 +27,11 @@ export type typeTodoState = {
     }
 }
 
-// 创建项目中的业务逻辑，继承自Service
+/**
+ * 创建项目中的业务逻辑，继承自Service
+ * 1、在构造函数中定义state的初始值
+ * 2、定义方法（不用区分同步异步）来修改state
+ */
 export default class TodoService extends Service<typeTodoState> {
     constructor() {
         super({
@@ -48,6 +52,7 @@ export default class TodoService extends Service<typeTodoState> {
         return todo
     }
 
+    // 提供给外部的添加todo的方法
     // 通过_produceState来修改内部的state，提供add方法给外部调用
     add(content: string) {
         // 内部使用了immer的produce，可以直接操作state，返回新的state
@@ -56,13 +61,15 @@ export default class TodoService extends Service<typeTodoState> {
             state.todoByIds[todo.id] = todo
         })
     }
-    
+
+    // 将todo标记成已完成 
     done(id: number, done: boolean) {
         this._produceState(state => {
             state.todoByIds[id] && (state.todoByIds[id].done = done)
         })
     }
 
+    // 删除todo
     delete(id: number) {
         this._produceState(state => {
             delete state.todoByIds[id]
@@ -86,7 +93,7 @@ export default class TodoService extends Service<typeTodoState> {
 - 如果一个组件依赖多个Service，可以将多个withService叠加使用，或者使用compose方法
 
 ```javascript
-// 注入TodoService服务
+// 注入TodoService服务，可以叠加withService来注入多个服务
 @withService(TodoService, (state: typeTodoState, ownProps) => ({
     todo: state.todoByIds[ownProps.id]
 }))
@@ -96,6 +103,7 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
         // use props and todoService instance injected by withService
         const { todo, todoService } = this.props
 
+        // 使用todoService的方法
         todoService.done(todo.id, !todo.done)
     }
 
