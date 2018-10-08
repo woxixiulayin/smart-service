@@ -34,6 +34,12 @@ describe('test connectService', () => {
         wrapper = mount(<App id={1} />)
     })
 
+    it('should get correct props at first and subscribe service', () => {
+        expect(dataService.nextListeners.length).toBe(1)
+        wrapper.unmount()
+        expect(dataService.nextListeners.length).toBe(0)
+    })
+
     it('should change when produceState', () => {
         expect(wrapper.text()).toBe('1')
         dataService._produceState(state => { state.a = 2 })
