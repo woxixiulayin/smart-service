@@ -42,4 +42,23 @@ describe('test withService', () => {
         expect(test).toBeTruthy()
     })
 
+    it('withService can inject different classes with the same name', () => {
+        // in last test service with name test is already in serviceMap
+        class Test extends Service<typeState> {
+            constructor() {
+                const state: typeState = {
+                    x: 3,
+                    y: 4
+                }
+                super({ state })
+            }
+        }
+        const mapState = jest.fn()
+        // should create Service if not exist
+        expect(Service.getServiceInstance(Test)).toBeFalsy()
+        withService(Test, mapState)
+        let test = Service.getServiceInstance(Test)
+        expect(test.getState().x).toBe(3)
+    })
+
 })

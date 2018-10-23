@@ -16,33 +16,34 @@ type typeServiceMap = Map<string, Service<any>>
 class Service <T> {
 
     // manage service instance
-    static serviceMap: typeServiceMap = new Map()
+    static serviceMap: typeServiceMap = new Map();
 
     // insert different service instance into serviceMap
-    static registerService = (ServiceClass): Service<T> => {
-        const name = getClassName(ServiceClass)
-        if (Service.serviceMap.has(name)) {
-            throw new Error(`service ${name} has already be in the serviceMap`)
+    static registerService = (ServiceClass: Service<any>): Service<T> => {
+        // use symbol for singleton
+        const key = Symbol.for(ServiceClass)
+        if (Service.serviceMap.has(key)) {
+            throw new Error(`service ${Service.serviceMap.get(key).name} has already be in the serviceMap`)
         }
         const serviceInstance = new ServiceClass()
-        Service.serviceMap.set(name, serviceInstance)
-
+        Service.serviceMap.set(key, serviceInstance)
+        
         return serviceInstance
     }
-
-    static unregisterService = (ServiceClass): boolean => {
-        const name = getClassName(ServiceClass)
-        if (!Service.serviceMap.has(name)) {
+    
+    static unregisterService = (ServiceClass: Service<any>): boolean => {
+        const key = Symbol.for(ServiceClass)
+        if (!Service.serviceMap.has(key)) {
             return false
         }
 
-        Service.serviceMap.delete(name)
+        Service.serviceMap.delete(key)
 
         return true
     }
 
     // use service Class to find service instance
-    static getServiceInstance = ServiceClass => Service.serviceMap.get(getClassName(ServiceClass)) || false
+    static getServiceInstance = (ServiceClass: Service<any>) => Service.serviceMap.get(Symbol.for(ServiceClass)) || false
 
     // properties
     _state: T
