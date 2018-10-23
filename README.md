@@ -6,12 +6,12 @@
 
 -----
 ## Service类
-
-- 所有定义的Service都不用主动实例化，系统会通过依赖关系自动创建对应的实例，且每一个类都只会存在唯一单例。
+- service： 业务的最小单元，包含业务数据state和业务方法，将同一个领域内的业务数据和逻辑集中到一个service类中统一处理。
 - state: Service类的内部数据，代码某一服务相关的数据。在实际编码中注意使用泛型Service<T>来定义state的类型会可以提供代码提示，方便不少。
 - _produceState: 继承自Service基类的方法，是唯一可以修改state的方法，一个Service类的state只能通过_produceState方法来修改，且外部不能直接调用，应该使用封装好的Service方法来操作。
     > _produceState内部使用了[immer](https://github.com/mweststrate/immer)中的produce方法，使得immutable的操作可以通过mutable的形式实现，这样避免了繁琐的手动返回新对象的操作。
 - subscribe: 继承自Service基类的方法，用于外部订阅state的变化。实际应用中主要使用withService自动绑定service的state到组件中。
+- 所有定义的Service都不用手动实例化，配合withService,系统会通过依赖关系自动创建对应的实例，且每一个类都只会存在唯一单例。
 
 ```javascript
 export type typeTodo = {
