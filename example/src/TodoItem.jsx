@@ -28,7 +28,7 @@ class TodoItem extends React.Component<{ todo: typeTodo, todoService: TodoServic
         return <div className={`todo-item ${todo.done ? 'line-through' : ''}`}>
            <button onClick={this.deleteItem}>删除</button>
             <input onClick={this.toggleDone}  checked={todo.done} type="checkbox" />
-            <span className={`todo-item-content`}>{ todo.content }ddd</span>
+            <span className={`todo-item-content`}>{ todo.content }</span>
         </div>
     }
 }
