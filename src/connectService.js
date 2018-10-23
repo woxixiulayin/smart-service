@@ -6,6 +6,8 @@ function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
 
+function noop() {}
+
 /**
  * insert service instance and map State into component
  * 
@@ -16,39 +18,46 @@ function getDisplayName(WrappedComponent) {
  * TODO:
  * 1. fix hot-reload duplicate subscribe error, reference react-redux
  */
-const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, ownProps: any) => any) => (WrappedComponent: React.Component<any, any>) => class extends React.Component<any, T> {
-    static displayName = `connectService-${serviceInstance.name}`
+const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, ownProps: any) => any, serviceName: string = '') => (WrappedComponent: React.Component<any, any>) => {
 
-    unsubscribe: Function | null
-
-    constructor(props: any) {
-        super(props)
-        // do not forget init state
-        this.state = {
-            ...mapState(serviceInstance.getState(), props)
+        if (typeof mapState !== 'function') {
+            mapState = noop
         }
-        this.unsubscribe = null
-    }
 
-    componentDidMount() {
-        this.unsubscribe = serviceInstance.subscribe(serviceState => {
-            // check if this subscription is already unsubscribe
-            if (!this.unsubscribe) return
-            this.setState(mapState(serviceState, this.props))
-        })
-    }
+        return class extends React.Component<any, T> {
+        static displayName = `connectService-${serviceInstance.name}`
 
-    componentWillUnmount() {
-        this.unsubscribe && this.unsubscribe()
-        this.unsubscribe = null
-    }
+        unsubscribe: Function | null
 
-    render() {
-        // passBy state and serviceInstance
-        return React.createElement(
-            WrappedComponent,
-            { ...this.props, ...this.state, [serviceInstance.name]: serviceInstance}
-        )
+        constructor(props: any) {
+            super(props)
+            // do not forget init state
+            this.state = {
+                ...mapState(serviceInstance.getState(), props)
+            }
+            this.unsubscribe = null
+        }
+
+        componentDidMount() {
+            this.unsubscribe = serviceInstance.subscribe(serviceState => {
+                // check if this subscription is already unsubscribe
+                if (!this.unsubscribe) return
+                this.setState(mapState(serviceState, this.props))
+            })
+        }
+
+        componentWillUnmount() {
+            this.unsubscribe && this.unsubscribe()
+            this.unsubscribe = null
+        }
+
+        render() {
+            // passBy state and serviceInstance
+            return React.createElement(
+                WrappedComponent,
+                { ...this.props, ...this.state, [serviceName || serviceInstance.name]: serviceInstance}
+            )
+        }
     }
 }
 

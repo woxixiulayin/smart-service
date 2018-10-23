@@ -50,8 +50,15 @@ describe('test connectService', () => {
         expect(wrapper.childAt(0).props().id).toBe(1)
     })
 
-    it('should passBy service instance', () => {
-        expect(wrapper.childAt(0).props().dataService).toBeTruthy()
+    it('should passBy service instance and can use self defined service name', () => {
+        @connectService(dataService, null, 'myDataService')
+        class App extends Component {
+            render() {
+                return <div>{this.props.num}</div>
+            }
+        }
+        const instance = mount(<App />)
+        expect(instance.childAt(0).props().myDataService).toBe(dataService)
     })
 
     it('should mapState work', () => {
