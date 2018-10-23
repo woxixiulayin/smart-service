@@ -1,6 +1,6 @@
 ## About
 > 一个小的数据管理框架，以Service的概念将数据与数据操作集合在一个个Service类内。将程序中的业务逻辑拆分成一个个小的Service，然后通过依赖注入将数据及实例注入到组件中。解决redux代码繁琐，数据与操作逻辑分散，不同数据模型间无法直接沟通的问题。同时鼓励将service(业务逻辑)拆分，不用通过一个中心store来预先申明项目中的所有service，配合依赖注入，可以使得业务逻辑部分代码的拆分、复用、按需加载都变得比较轻松。
-> 后续可能加入Rxjs部分，使得该框架更容易在实时应用中更加容易使用。因为本身这种分拆的service结构就容易在各自的逻辑内依赖其他service做出
+> 有一个RxService，在实时应用或service状态有依赖的情况中使用会更加便捷。因为这种分拆的service结构在各自的逻辑内依赖其他service比较方便，不会影响其他业务和组件。
 -----
 
 [![Build Status](https://travis-ci.org/woxixiulayin/smart-service.svg?branch=master)](https://travis-ci.org/woxixiulayin/smart-service)[![Coverage Status](https://coveralls.io/repos/github/woxixiulayin/smart-service/badge.svg?branch=master)](https://coveralls.io/github/woxixiulayin/smart-service?branch=master)
@@ -86,11 +86,11 @@ export default class TodoService extends Service<typeTodoState> {
 
 ### withService
 
-- withService接收两个参数，第一个参数是组件依赖的类，第二个参数是一个函数表示从类的state到组件props的映射
+- withService可以接收三个参数，第一个参数是组件依赖的类，第二个参数（可选）是一个函数表示从类的state到组件props的映射，第三个参数（可选）设置组件props中对应的service的键名
 (相当于react-redux中的mapStateToProps)
 - 每次该类实例的state发生变化都会触发组件相应props的变化
-- withService会根据当前系统中是否存在对应的实例来创建，保证系统只存在唯一一个单例。也就是说不用主动实例化服务。组件挂载时会自动根据需要创建所依赖的实例。
-- withService会额外传递一个类的实例给组件的props，组件就获得了相应Servcie的参数方法。实例的名字是对应的驼峰命**TodoService -> todoService**。这样服务与组件可以组合或单独复用到不同的页面。组件内部可以直接调用服务实例的方法，而具体注入的服务可以在使用时选择（比如在不同地方使用同一组件时，分别注入具有同样接口的服务）。
+- 依赖注入：withService会根据当前系统中是否存在对应的实例来创建，保证系统只存在唯一一个单例。也就是说不用主动实例化服务。组件挂载时会自动根据需要创建所依赖的实例。
+- withService会额外传递一个类的实例给组件的props，组件就获得了相应Servcie的参数方法。实例的名字是对应的驼峰命**TodoService -> todoService**（或者通过设置第三个参数来主动设置）。这样服务与组件可以组合或单独复用到不同的页面。组件内部可以直接调用服务实例的方法，而具体注入的服务可以在使用时选择（比如在不同地方使用同一组件时，分别注入具有同样接口的服务）。
 - 如果一个组件依赖多个Service，可以将多个withService叠加使用，或者使用compose方法
 
 ```javascript
