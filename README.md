@@ -1,5 +1,5 @@
 ## About
-> 一个小的数据管理框架，以Service的概念将数据与数据操作集合在一个个Service类内。将程序中的业务逻辑拆分成一个个小的Service，然后通过依赖注入将数据及实例注入到组件中。解决redux代码繁琐，数据与操作逻辑分散，不同数据模型间无法直接沟通的问题。同时鼓励将service(业务逻辑)拆分，不用通过一个中心store来预先申明项目中的所有service，配合依赖注入，可以使得业务逻辑部分代码的拆分、复用、按需加载都变得比较轻松。
+> 一个小的数据管理框架，以Service（业务模块）的概念将状态与方法（不用区分同步异步）集合在一个class内，然后通过依赖注入（程序运行期间才会生成服务单例）将Service实例注入到组件中，使得组件可以使用Service的状态和方法。解决redux代码繁琐，数据与操作逻辑分散，不同数据模型间无法直接沟通的问题。同时鼓励将service(业务逻辑)拆分，不用通过一个中心store来预先申明项目中的所有service，配合依赖注入，可以使得Service随组件的挂载/卸载而创建/注销，这样代码的拆分、复用、按需加载都会变的比较轻松。
 -----
 
 [![Build Status](https://travis-ci.org/woxixiulayin/smart-service.svg?branch=master)](https://travis-ci.org/woxixiulayin/smart-service)[![Coverage Status](https://coveralls.io/repos/github/woxixiulayin/smart-service/badge.svg?branch=master)](https://coveralls.io/github/woxixiulayin/smart-service?branch=master)
