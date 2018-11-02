@@ -68,9 +68,6 @@ describe('test connectService', () => {
     it('should get inside dumb component by getWrappedInstance', () => {
         @connectService(dataService, null, 'myDataService')
         class App extends Component {
-            componentDidMount() {
-                console.log('App did mount')
-            }
             test() {
                 return 'test getWrappedInstance'
             }

@@ -61,10 +61,6 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
             }
         }
 
-        componentDidMount() {
-            console.log('connect service did mount')
-        }
-
         componentWillUnmount() {
             this.unsubscribe && this.unsubscribe()
             this.unsubscribe = null
