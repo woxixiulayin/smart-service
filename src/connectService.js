@@ -25,9 +25,10 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
         }
 
         return class extends React.Component<any, T> {
-        static displayName = `connectService-${serviceInstance.name}`
+        static displayName = `connectService(${serviceInstance.name})`
 
-        unsubscribe: Function | null
+        unsubscribe: Function | null;
+        wrappedInstance: React.Component<any, any> | null;
 
         constructor(props: any) {
             super(props)
@@ -36,14 +37,32 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
                 ...mapState(serviceInstance.getState(), props)
             }
             this.unsubscribe = null
-        }
-
-        componentDidMount() {
+            this.wrappedInstance = null
             this.unsubscribe = serviceInstance.subscribe(serviceState => {
                 // check if this subscription is already unsubscribe
                 if (!this.unsubscribe) return
                 this.setState(mapState(serviceState, this.props))
             })
+        }
+
+        setWrappedInstance = node => {
+            this.wrappedInstance = node
+        }
+
+        getWrappedInstance = () => this.wrappedInstance
+
+        createExtraProps = () => {
+
+            return {
+                ...this.props,
+                ...this.state,
+            [serviceName || serviceInstance.name]: serviceInstance,
+                ref: node => this.setWrappedInstance
+            }
+        }
+
+        componentDidMount() {
+            console.log('connect service did mount')
         }
 
         componentWillUnmount() {
@@ -55,7 +74,7 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
             // passBy state and serviceInstance
             return React.createElement(
                 WrappedComponent,
-                { ...this.props, ...this.state, [serviceName || serviceInstance.name]: serviceInstance}
+                this.createExtraProps()
             )
         }
     }
