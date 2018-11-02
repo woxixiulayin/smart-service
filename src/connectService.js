@@ -64,6 +64,9 @@ const connectService = <T>(serviceInstance: Service<T>, mapState: (state: T, own
         componentWillUnmount() {
             this.unsubscribe && this.unsubscribe()
             this.unsubscribe = null
+            if (serviceInstance.currentListeners.length === 0) {
+                Service.unregisterService(serviceInstance.constructor)
+            }
         }
 
         render() {

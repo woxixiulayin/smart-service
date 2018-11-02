@@ -1,4 +1,6 @@
 jest.mock('../connectService.js')
+import { mount } from 'enzyme'
+import React, { Component } from 'react'
 import connectService from '../connectService'
 import withService from '../withService'
 import Service from '../Service'
@@ -60,5 +62,4 @@ describe('test withService', () => {
         let test = Service.getServiceInstance(Test)
         expect(test.getState().x).toBe(3)
     })
-
 })

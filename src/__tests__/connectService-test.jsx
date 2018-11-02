@@ -65,19 +65,15 @@ describe('test connectService', () => {
         expect(wrapper.childAt(0).props().id).toBe(1)
     })
 
-    it('should get inside dumb component by getWrappedInstance', () => {
+    it.only('should unregister service if unmount', () => {
         @connectService(dataService, null, 'myDataService')
         class App extends Component {
-            test() {
-                return 'test getWrappedInstance'
-            }
             render() {
                 return <div>{this.props.num}</div>
             }
         }
         const instance = mount(<App />)
-        console.log(instance.childAt(0).props())
-        // expect(appInstance.getWrappedInstance().test()).toBe('test getWrappedInstance')
+        instance.unmount()
+        expect(Service.getServiceInstance(DataService)).toBeFalsy()
     })
-
 })
